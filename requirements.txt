@@ -3,3 +3,4 @@ langchain-openai==0.1.21
 langchain-community==0.2.12
 langchainhub==0.1.21
 black==24.8.0
+python-dotenv==1.0.1
