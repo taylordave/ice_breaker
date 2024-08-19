@@ -28,7 +28,7 @@ if __name__ == "__main__":
     )
 
     # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
-    llm = ChatOllama(model="llama3.1")
+    llm = ChatOllama(model="mistral")
 
     chain = summary_prompt_template | llm | StrOutputParser()
     res = chain.invoke(input={"information": information})
