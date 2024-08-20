@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from langchain.chains.llm import LLMChain
 from langchain.prompts.prompt import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_ollama import ChatOllama
@@ -31,15 +30,17 @@ def ice_break_with(name: str) -> str:
 
     llm = ChatOllama(model='mistral')
 
-    chain = LLMChain(llm=llm, prompt=summary_prompt_template) | StrOutputParser()
+    chain = summary_prompt_template | llm | StrOutputParser()
 
     res = chain.invoke(input={"information": linkedin_data, "twitter_posts": tweets})
 
     print(res)
+
+    return res
 
 
 if __name__ == "__main__":
     load_dotenv()
 
     print("Ice Breaker Enter")
-    ice_break_with(name="Harrison Chase")
+    ice_break_with(name="Eden Marco")
