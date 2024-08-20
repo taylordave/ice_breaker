@@ -1,33 +1,37 @@
+import os
 from dotenv import load_dotenv
 
-load_dotenv()
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain.prompts.prompt import PromptTemplate
 from langchain_core.tools import Tool
 from langchain.agents import (
     create_react_agent,
-    AgentExecutor,
+    AgentExecutor
 )
 from langchain import hub
+
 from tools.tools import get_profile_url_tavily
+
+load_dotenv()
 
 
 def lookup(name: str) -> str:
-    llm = ChatOpenAI(
-        temperature=0,
-        model_name="gpt-3.5-turbo",
-    )
-    template = """given the full name {name_of_person} I want you to get it me a link to their Linkedin profile page.
-                              Your answer should contain only a URL"""
+    llm = ChatOllama(model="mistral")
+
+    template = """
+                   Given the search criteria {name_of_person} I want you to get me a link to their
+                   LinkedIn profile page. Your answer should only contain a URL
+               """
 
     prompt_template = PromptTemplate(
-        template=template, input_variables=["name_of_person"]
+        template=template, input_variables=["name_of_person"],
     )
+
     tools_for_agent = [
         Tool(
             name="Crawl Google 4 linkedin profile page",
             func=get_profile_url_tavily,
-            description="useful for when you need get the Linkedin Page URL",
+            description="useful for when you need to get the LinkedIn profile page URL",
         )
     ]
 
@@ -39,9 +43,10 @@ def lookup(name: str) -> str:
         input={"input": prompt_template.format_prompt(name_of_person=name)}
     )
 
-    linked_profile_url = result["output"]
-    return linked_profile_url
+    linkedin_profile_url = result["output"]
+    return linkedin_profile_url
 
 
-if __name__ == "__main__":
-    print(lookup(name="Eden Marco Udemy"))
+if __name__ == '__main__':
+    linkedin_url = lookup(name="Elon Musk")
+    print(linkedin_url)
